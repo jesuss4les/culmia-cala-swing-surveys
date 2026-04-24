@@ -345,6 +345,33 @@ input[type=text]:focus,input[type=email]:focus{border-color:#018080}
 
 <script>
 var lang='en', top5Count=0;
+
+function sendViaIframe(data, onSuccess, onError){
+  try {
+    var iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = SHEET_URL;
+    form.target = 'hidden_iframe';
+    form.style.display = 'none';
+
+    // Enviamos todos los datos como un campo JSON único
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(data);
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    iframe.onload = function(){ onSuccess(); };
+    setTimeout(function(){ onSuccess(); }, 2000);
+    form.submit();
+  } catch(e){ onError(); }
+}
 function setLang(l,btn){
   lang=l;
   document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
@@ -500,15 +527,11 @@ function submitSurvey(){
   payload.token = TOKEN;
   payload.survey = 'agents';
 
-  fetch(SHEET_URL,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  }).then(function(r){ return r.json(); }).then(function(){
+  sendViaIframe(payload, function(){
     document.getElementById('form-body').style.display='none';
     document.getElementById('thankyou').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});
-  }).catch(function(){
+  }, function(){
     btn.textContent='Submit survey →';
     btn.disabled=false;
     alert('Connection error. Please try again.');
