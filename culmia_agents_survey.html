@@ -502,10 +502,9 @@ function submitSurvey(){
 
   fetch(SHEET_URL,{
     method:'POST',
-    mode:'no-cors',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify(payload)
-  }).then(function(){
+  }).then(function(r){ return r.json(); }).then(function(){
     document.getElementById('form-body').style.display='none';
     document.getElementById('thankyou').style.display='block';
     window.scrollTo({top:0,behavior:'smooth'});
