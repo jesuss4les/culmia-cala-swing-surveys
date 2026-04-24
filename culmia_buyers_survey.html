@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Culmia Cala Swing – Your Future Home</title>
+<style>
+:root{--c-dark:#00272c;--c-teal:#018080;--c-light:#dfe9ec;--c-white:#ffffff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#dfe9ec;color:#00272c;font-size:15px}
+.wrap{max-width:720px;margin:0 auto;padding:2rem 1rem 4rem}
+.hero{border-radius:16px;overflow:hidden;margin-bottom:1.5rem;position:relative;background:#00272c}
+.hero-bg{width:100%;height:260px;object-fit:cover;display:block;opacity:.4}
+.hero-bg-ph{width:100%;height:260px;background:#00272c;display:block}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,39,44,.2),rgba(0,39,44,.85))}
+.hero-content{position:absolute;bottom:0;left:0;right:0;padding:1.75rem 2rem}
+.hero-badge{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:rgba(1,128,128,.35);border:1px solid rgba(1,128,128,.6);border-radius:20px;padding:4px 14px;display:inline-block;margin-bottom:.6rem;color:#dfe9ec}
+.hero p{font-size:13px;color:rgba(223,233,236,.82);line-height:1.65;max-width:560px;margin-top:.4rem}
+.current-feat{display:flex;flex-wrap:wrap;gap:6px;margin-top:.85rem}
+.feat-tag{background:rgba(1,128,128,.25);border:1px solid rgba(1,128,128,.45);border-radius:20px;padding:3px 12px;font-size:11px;color:#dfe9ec}
+.progress-wrap{margin-bottom:1.5rem}
+.progress-label{font-size:12px;color:#00272c;margin-bottom:6px;display:flex;justify-content:space-between;font-weight:600}
+.progress-bar{height:5px;background:#b0c8cc;border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:#018080;border-radius:3px;transition:width .4s}
+.card{background:#fff;border:1px solid #c4d8dc;border-radius:14px;padding:1.5rem;margin-bottom:1rem}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#018080;margin-bottom:.2rem}
+.sec-title{font-size:17px;font-weight:700;color:#00272c;margin-bottom:.25rem}
+.sec-sub{font-size:13px;color:#456;line-height:1.6;margin-bottom:1rem}
+.field-label{font-size:13px;font-weight:700;color:#00272c;margin-bottom:5px;display:block}
+input[type=text],input[type=email],textarea{width:100%;padding:10px 13px;border:1.5px solid #c4d8dc;border-radius:9px;font-size:14px;outline:none;transition:border .15s;margin-bottom:12px;background:#fff;color:#00272c;font-family:Arial,Helvetica,sans-serif}
+input[type=text]:focus,input[type=email]:focus,textarea:focus{border-color:#018080}
+textarea{resize:vertical;min-height:80px}
+.options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.opt{border:1.5px solid #c4d8dc;border-radius:11px;overflow:hidden;cursor:pointer;transition:all .15s;background:#fff}
+.opt:hover{border-color:#018080}
+.opt.selected{border:2px solid #018080;background:#f0f9f9}
+.opt-img{width:100%;height:110px;object-fit:cover;display:block}
+.opt-img-ph{width:100%;height:110px;display:flex;align-items:center;justify-content:center;font-size:26px;background:#dfe9ec}
+.opt-body{padding:10px 12px 12px;display:flex;align-items:flex-start;gap:9px}
+.chk{width:19px;height:19px;border-radius:5px;border:1.5px solid #b0c8cc;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.opt.selected .chk{background:#018080;border-color:#018080}
+.tick{display:none;width:5px;height:9px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg) translateY(-1px)}
+.opt.selected .tick{display:block}
+.opt-name{font-size:13px;font-weight:700;color:#00272c;margin-bottom:2px}
+.opt-desc{font-size:11px;color:#668;line-height:1.4}
+/* RADIO BUTTONS */
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem}
+.radio-opt{flex:1;min-width:120px;padding:10px 14px;border:1.5px solid #c4d8dc;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;color:#456;text-align:center;background:#fff;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.radio-opt:hover{border-color:#018080}
+.radio-opt.selected{border:2px solid #018080;background:#f0f9f9;color:#018080}
+.radio-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #b0c8cc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio-opt.selected .radio-dot{border-color:#018080}
+.radio-dot-inner{width:8px;height:8px;border-radius:50%;background:#018080;display:none}
+.radio-opt.selected .radio-dot-inner{display:block}
+/* TOP 5 */
+.top5-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:8px}
+.chip{padding:9px 13px;border:1.5px solid #c4d8dc;border-radius:9px;background:#fff;cursor:pointer;font-size:13px;color:#00272c;display:flex;align-items:center;gap:9px;transition:all .15s}
+.chip:hover{border-color:#018080}
+.chip.selected{border:2px solid #018080;background:#f0f9f9;font-weight:700}
+.chip-num{width:23px;height:23px;border-radius:50%;background:#dfe9ec;color:#668;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.chip.selected .chip-num{background:#018080;color:#fff}
+.counter{font-size:12px;color:#668;margin-top:8px}
+.counter.done{color:#018080;font-weight:700}
+.info-card{background:#00272c;border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:1rem}
+.info-card .sec-label{color:#018080}
+.info-card .sec-title{color:#fff}
+.info-card p{font-size:13px;color:#dfe9ec;line-height:1.7;margin-top:.5rem}
+.submit-btn{width:100%;padding:1rem;background:#018080;color:#fff;border:none;border-radius:11px;font-size:16px;font-weight:700;cursor:pointer;margin-top:.5rem;transition:background .15s}
+.submit-btn:hover{background:#00272c}
+.required{color:#c0392b;font-size:12px;margin-left:3px}
+.err{color:#c0392b;font-size:12px;margin-top:-8px;margin-bottom:10px;display:none}
+.hidden-section{display:none}
+.thank-you{text-align:center;padding:3rem 1.5rem;background:#fff;border:1px solid #c4d8dc;border-radius:14px}
+.ty-icon{width:62px;height:62px;border-radius:50%;background:#f0f9f9;border:2px solid #018080;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.thank-you h2{font-size:22px;font-weight:700;color:#00272c;margin-bottom:.6rem}
+.thank-you p{font-size:14px;color:#456;line-height:1.65}
+.lang-toggle{display:flex;justify-content:flex-end;gap:6px;margin-bottom:1rem}
+.lang-btn{padding:4px 14px;border:1.5px solid #b0c8cc;border-radius:20px;background:#fff;font-size:12px;font-weight:700;cursor:pointer;color:#668;transition:all .15s}
+.lang-btn.active{background:#018080;color:#fff;border-color:#018080}
+.note-box{background:#f0f9f9;border:1px solid #a8d5d5;border-radius:11px;padding:1rem 1.25rem;margin-bottom:1rem;font-size:13px;color:#00272c;line-height:1.65}
+</style>
+</head>
+<body>
+<!-- PANTALLA ACCESO DENEGADO -->
+<div id="access-screen" style="display:none;position:fixed;inset:0;background:#dfe9ec;z-index:999;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:2rem">
+  <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg" style="height:44px;margin-bottom:2rem">
+    <text x="12" y="72" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="3" fill="#00272c" transform="rotate(-90,12,72)" text-anchor="start">CULMIA</text>
+    <line x1="26" y1="4" x2="26" y2="76" stroke="#00272c" stroke-width="1" opacity=".4"/>
+    <text x="38" y="42" font-family="Arial,sans-serif" font-size="36" font-weight="300" fill="#00272c" letter-spacing="-0.5">Cala Swing</text>
+    <text x="38" y="74" font-family="Arial,sans-serif" font-size="36" font-weight="300" fill="#00272c" letter-spacing="-0.5">Mijas</text>
+  </svg>
+  <div style="background:#fff;border:1px solid #c4d8dc;border-radius:16px;padding:2.5rem 2rem;max-width:400px;width:100%">
+    <div style="width:56px;height:56px;border-radius:50%;background:#f0f9f9;border:2px solid #018080;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#018080" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h2 id="access-title" style="font-size:18px;font-weight:700;color:#00272c;margin-bottom:.5rem">Checking access...</h2>
+    <p id="access-msg" style="font-size:13px;color:#456;line-height:1.6">Please wait while we verify your link.</p>
+    <p style="font-size:12px;color:#018080;margin-top:1.25rem">culmia.es</p>
+  </div>
+</div>
+
+<div id="main-content" style="display:none">
+<div class="wrap">
+  <h2 style="position:absolute;left:-9999px">Culmia Cala Swing Mijas – Buyer & Investor Survey</h2>
+
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+    <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80" class="hero-bg" onerror="this.className='hero-bg-ph'" alt=""/>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg" style="height:52px;display:block;margin-bottom:1rem" aria-label="Culmia Cala Swing Mijas">
+        <text x="12" y="72" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="3" fill="#ffffff" transform="rotate(-90,12,72)" text-anchor="start">CULMIA</text>
+        <line x1="26" y1="4" x2="26" y2="76" stroke="#ffffff" stroke-width="1" opacity=".5"/>
+        <text x="38" y="42" font-family="Arial,sans-serif" font-size="36" font-weight="300" fill="#ffffff" letter-spacing="-0.5">Cala Swing</text>
+        <text x="38" y="74" font-family="Arial,sans-serif" font-size="36" font-weight="300" fill="#ffffff" letter-spacing="-0.5">Mijas</text>
+      </svg>
+      <div class="hero-badge" data-en="Your future home · Share your vision" data-es="Tu futura vivienda · Comparte tu visión">Your future home · Share your vision</div>
+      <p data-en="We want your home to be exactly what you imagined. Tell us which services and spaces would make your daily life more comfortable, enjoyable, and truly yours." data-es="Queremos que tu hogar sea exactamente lo que imaginaste. Cuéntanos qué servicios y espacios harían tu día a día más cómodo, agradable y completamente tuyo.">We want your home to be exactly what you imagined. Tell us which services and spaces would make your daily life more comfortable, enjoyable, and truly yours.</p>
+      <div class="current-feat">
+        <span class="feat-tag" data-en="Communal pool" data-es="Piscina comunitaria">Communal pool</span>
+        <span class="feat-tag" data-en="Social club" data-es="Club social">Social club</span>
+        <span class="feat-tag" data-en="Gym" data-es="Gimnasio">Gym</span>
+        <span class="feat-tag" data-en="Cardio space" data-es="Espacio cardio">Cardio space</span>
+        <span class="feat-tag">Culmia Home App</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span data-en="Your progress" data-es="Tu progreso">Your progress</span>
+      <span id="pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="pfill" style="width:0%"></div></div>
+  </div>
+
+  <div id="form-body">
+
+    <!-- NOTE -->
+    <div class="note-box" id="note-box">
+      <strong data-en="A note about these proposals:" data-es="Una nota sobre estas propuestas:">A note about these proposals:</strong>
+      <span data-en=" All options below are feasible within available space and will not affect the building permit for Phase I (under construction) or Phase II (already submitted). Your feedback helps us prioritise what matters most to you." data-es=" Todas las opciones son viables dentro del espacio disponible y no afectarán a los permisos de construcción de la Fase I ni la Fase II. Tu opinión nos ayuda a priorizar lo que más te importa."> All options below are feasible within available space and will not affect the building permit for Phase I (under construction) or Phase II (already submitted). Your feedback helps us prioritise what matters most to you.</span>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="card">
+      <div class="sec-label" data-en="About you" data-es="Sobre ti">About you</div>
+      <div class="sec-title" data-en="Tell us a little about yourself" data-es="Cuéntanos un poco sobre ti">Tell us a little about yourself</div>
+      <div class="sec-sub" data-en="Your details will only be used by the Culmia team to follow up on this survey." data-es="Tus datos serán utilizados únicamente por el equipo de Culmia para dar seguimiento a esta encuesta.">Your details will only be used by the Culmia team to follow up on this survey.</div>
+      <label class="field-label" data-en="Full name" data-es="Nombre completo">Full name <span class="required">*</span></label>
+      <input type="text" id="fname" placeholder="e.g. James Wilson" oninput="updateProgress()"/>
+      <div class="err" id="err-name" data-en="Please enter your name." data-es="Por favor, introduce tu nombre.">Please enter your name.</div>
+      <label class="field-label" data-en="Email address" data-es="Correo electrónico">Email address <span class="required">*</span></label>
+      <input type="email" id="femail" placeholder="e.g. james@email.com" oninput="updateProgress()"/>
+      <div class="err" id="err-email" data-en="Please enter a valid email." data-es="Por favor, introduce un email válido.">Please enter a valid email.</div>
+      <label class="field-label" data-en="Are you purchasing as:" data-es="Estás comprando como:">Are you purchasing as: <span class="required">*</span></label>
+      <div class="radio-group" id="buyer-type">
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Future resident" data-es="Futuro residente">Future resident</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Investor" data-es="Inversor">Investor</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Both" data-es="Ambos">Both</span></div>
+      </div>
+      <div class="err" id="err-type" data-en="Please select a purchase type." data-es="Por favor, selecciona el tipo de compra.">Please select a purchase type.</div>
+    </div>
+
+    <!-- S1A WELLBEING -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 1 · Wellbeing & Lifestyle" data-es="Sección 1 · Bienestar & Lifestyle">Section 1 · Wellbeing & Lifestyle</div>
+      <div class="sec-title" data-en="Which of these would you actually use?" data-es="¿Cuáles de estos utilizarías realmente?">Which of these would you actually use?</div>
+      <div class="sec-sub" data-en="Think about your daily routine and lifestyle. Select all that apply." data-es="Piensa en tu rutina diaria y estilo de vida. Selecciona todas las que apliquen.">Think about your daily routine and lifestyle. Select all that apply.</div>
+      <div class="options-grid" id="s1a">
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🧘</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Yoga & meditation area" data-es="Zona yoga & meditación">Yoga & meditation area</div><div class="opt-desc" data-en="A peaceful space for yoga, stretching, or relaxation — indoors or outdoors" data-es="Espacio tranquilo para yoga, estiramientos o relajación, interior o exterior">A peaceful space for yoga, stretching, or relaxation</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🏃</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Running circuit" data-es="Circuito de running">Running circuit</div><div class="opt-desc" data-en="A marked route within the development for your daily walk, jog, or run" data-es="Ruta señalizada dentro del desarrollo para tu paseo, trote o carrera diaria">Marked route within the development for daily exercise</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1626200793317-e4ccf2d4fe45?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>💪</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Calisthenics park" data-es="Parque de calistenia">Calisthenics park</div><div class="opt-desc" data-en="Outdoor fitness equipment for bodyweight training, available whenever you need it" data-es="Equipamiento fitness exterior para entrenamiento con peso corporal, disponible cuando lo necesites">Outdoor equipment for bodyweight training, always available</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>⛳</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Putting green" data-es="Putting green">Putting green</div><div class="opt-desc" data-en="A small artificial grass area to enjoy a recreational round of golf steps from your home" data-es="Pequeña zona de césped artificial para disfrutar de golf recreativo a pasos de tu casa">Recreational golf practice steps from your front door</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S1B EXPERIENCE -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 1 · Experience & Lifestyle" data-es="Sección 1 · Experiencia & Lifestyle">Section 1 · Experience & Lifestyle</div>
+      <div class="sec-title" data-en="Which appeals to you the most?" data-es="¿Cuál te atrae más?">Which appeals to you the most?</div>
+      <div class="sec-sub" data-en="Which outdoor space would enrich your everyday life?" data-es="¿Qué espacio exterior enriquecería más tu vida cotidiana?">Which outdoor space would enrich your everyday life?</div>
+      <div class="options-grid" id="s1b">
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🌿</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Mediterranean sensory garden" data-es="Jardín sensorial mediterráneo">Mediterranean sensory garden</div><div class="opt-desc" data-en="Aromatic plants, natural walking paths — a place to truly disconnect and recharge" data-es="Plantas aromáticas, caminos naturales — un lugar para desconectar y recargar energías">Aromatic plants and natural paths to disconnect and recharge</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>📚</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Quiet reading area" data-es="Zona de lectura tranquila">Quiet reading area</div><div class="opt-desc" data-en="A calm, comfortable space to read, work, or simply enjoy some peace and quiet" data-es="Un espacio cómodo y tranquilo para leer, trabajar o simplemente disfrutar de la calma">A calm space to read, work, or simply enjoy some quiet</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S1C SOCIAL -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 1 · Social & Community" data-es="Sección 1 · Social & Comunidad">Section 1 · Social & Community</div>
+      <div class="sec-title" data-en="Which would you use to enjoy time with your community?" data-es="¿Cuál usarías para disfrutar con tu comunidad?">Which would you use to enjoy time with your community?</div>
+      <div class="sec-sub" data-en="Select all that you'd genuinely make use of." data-es="Selecciona todos los que usarías de verdad.">Select all that you'd genuinely make use of.</div>
+      <div class="options-grid" id="s1c">
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🎬</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Outdoor cinema" data-es="Cine al aire libre">Outdoor cinema</div><div class="opt-desc" data-en="Open-air screenings and community events under the sky — a unique shared experience" data-es="Proyecciones al aire libre y eventos comunitarios bajo el cielo — una experiencia compartida única">Open-air screenings and community events under the sky</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🍖</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="BBQ / outdoor kitchen area" data-es="Zona BBQ / cocina exterior">BBQ / outdoor kitchen area</div><div class="opt-desc" data-en="Gather with family and friends for outdoor meals and social moments" data-es="Reúnete con familia y amigos para comidas al aire libre y momentos sociales">Gather with family and friends for outdoor meals and moments</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S1D PET -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 1 · Pets" data-es="Sección 1 · Mascotas">Section 1 · Pets</div>
+      <div class="sec-title" data-en="Do you have a pet?" data-es="¿Tienes mascota?">Do you have a pet?</div>
+      <div class="radio-group" id="has-pet">
+        <div class="radio-opt" onclick="selectRadio(this,'has-pet');showPet(true)"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Yes" data-es="Sí">Yes</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'has-pet');showPet(false)"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="No" data-es="No">No</span></div>
+      </div>
+      <div id="pet-section" class="hidden-section">
+        <div class="sec-sub" style="margin-top:.5rem" data-en="Would this be useful for you?" data-es="¿Te sería útil esto?">Would this be useful for you?</div>
+        <div class="options-grid" id="s1d">
+          <div class="opt" onclick="toggle(this)">
+            <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🐾</div>'" alt=""/>
+            <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Yes – Pet station" data-es="Sí – Pet station">Yes – Pet station</div><div class="opt-desc" data-en="A dedicated area to wash and dry your pet after walks — right at home" data-es="Zona dedicada para lavar y secar a tu mascota tras los paseos — en casa">A dedicated area to wash and dry your pet after walks</div></div></div>
+          </div>
+          <div class="opt" onclick="toggle(this)">
+            <div class="opt-img-ph" style="background:#dfe9ec">—</div>
+            <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="No – not necessary for me" data-es="No – no lo necesito">No – not necessary for me</div><div class="opt-desc" data-en="I have a pet but this wouldn't be something I'd use regularly" data-es="Tengo mascota pero no es algo que usaría con regularidad">I have a pet but wouldn't use this regularly</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2A LEISURE -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 2 · Leisure & Family" data-es="Sección 2 · Ocio & Familia">Section 2 · Leisure & Family</div>
+      <div class="sec-title" data-en="Which do you find most appealing?" data-es="¿Cuál te atrae más?">Which do you find most appealing?</div>
+      <div class="sec-sub" data-en="Think about how you like to spend your free time and who you share your home with." data-es="Piensa en cómo disfrutas tu tiempo libre y con quién compartes tu hogar.">Think about how you like to spend your free time and who you share your home with.</div>
+      <div class="options-grid" id="s2a">
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🎯</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Social games (pétanque / ping pong / croquet)" data-es="Juegos sociales (petanca / ping pong / croquet)">Social games (pétanque / ping pong / croquet)</div><div class="opt-desc" data-en="Fun, relaxed outdoor games to enjoy with neighbours, friends, and family" data-es="Juegos exteriores relajados para disfrutar con vecinos, amigos y familia">Fun outdoor games to enjoy with neighbours and family</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🎠</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Games room / kids club" data-es="Sala de juegos / kids club">Games room / kids club</div><div class="opt-desc" data-en="A safe, dedicated indoor space for children's activities and family entertainment" data-es="Un espacio interior dedicado y seguro para actividades infantiles y entretenimiento familiar">Safe indoor space for kids' activities and family fun</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2B PRACTICAL -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 2 · Practical Services" data-es="Sección 2 · Servicios Prácticos">Section 2 · Practical Services</div>
+      <div class="sec-title" data-en="Which would make your daily life easier?" data-es="¿Cuál facilitaría más tu vida diaria?">Which would make your daily life easier?</div>
+      <div class="sec-sub" data-en="Select all the services you'd genuinely find useful day to day." data-es="Selecciona todos los servicios que realmente encontrarías útiles en el día a día.">Select all the services you'd genuinely find useful day to day.</div>
+      <div class="options-grid" id="s2b">
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🚲</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Bike station" data-es="Bike station">Bike station</div><div class="opt-desc" data-en="Secure storage, tyre inflation, and washing — everything for cycling from home" data-es="Almacenamiento seguro, inflado de ruedas y lavado — todo para ciclistas desde casa">Secure storage, inflation, and washing for cyclists</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🚗</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Car wash area" data-es="Zona de lavado de coches">Car wash area</div><div class="opt-desc" data-en="Keep your vehicle clean without leaving the development" data-es="Mantén tu vehículo limpio sin salir del desarrollo">Keep your car clean without leaving the development</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🛴</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Electric scooter charging points" data-es="Puntos de carga patinetes">Electric scooter charging points</div><div class="opt-desc" data-en="Always-charged e-scooters and personal mobility devices, right at the door" data-es="Patinetes eléctricos y vehículos de movilidad personal siempre cargados, a la puerta">Charging for e-scooters and mobility devices at the door</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🚐</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Car sharing / VTC pick-up point" data-es="Punto car sharing / VTC">Car sharing / VTC pick-up point</div><div class="opt-desc" data-en="A comfortable covered spot to wait for your ride — no more waiting at the gate" data-es="Un cómodo punto cubierto para esperar tu transporte — sin esperas en la entrada">A covered, comfortable spot to wait for your ride</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- S2C ASPIRATIONAL -->
+    <div class="card">
+      <div class="sec-label" data-en="Section 2 · Aspirational Features" data-es="Sección 2 · Características Aspiracionales">Section 2 · Aspirational Features</div>
+      <div class="sec-title" data-en="Which would you find most appealing?" data-es="¿Cuál encontrarías más atractiva?">Which would you find most appealing?</div>
+      <div class="sec-sub" data-en="These are spaces designed to elevate your lifestyle within the community." data-es="Estos son espacios diseñados para elevar tu estilo de vida dentro de la comunidad.">These are spaces designed to elevate your lifestyle within the community.</div>
+      <div class="options-grid" id="s2c">
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🍷</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Wine cellar" data-es="Wine cellar comunitaria">Wine cellar</div><div class="opt-desc" data-en="A curated wine selection, order via the Culmia Home App and enjoy at home or with neighbours" data-es="Selección de vinos curada, pide desde la Culmia Home App y disfruta en casa o con vecinos">Order from the App and enjoy with neighbours at home</div></div></div>
+        </div>
+        <div class="opt" onclick="toggle(this)">
+          <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&q=70" class="opt-img" onerror="this.outerHTML='<div class=opt-img-ph>🏟️</div>'" alt=""/>
+          <div class="opt-body"><div class="chk"><div class="tick"></div></div><div><div class="opt-name" data-en="Sport room" data-es="Sport room">Sport room</div><div class="opt-desc" data-en="The big game, together — a shared space to watch live sport with your community" data-es="El gran partido, juntos — un espacio compartido para ver deporte en directo con tu comunidad">Watch live sport together — a true community experience</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP 5 -->
+    <div class="card">
+      <div class="sec-label" data-en="Your priorities" data-es="Tus prioridades">Your priorities</div>
+      <div class="sec-title" data-en="What would make this development most attractive to you?" data-es="¿Qué haría este desarrollo más atractivo para ti?">What would make this development most attractive to you?</div>
+      <div class="sec-sub" data-en="Rank your top 5 in order of personal importance. Tap in order." data-es="Clasifica tus 5 favoritos por orden de importancia personal. Selecciona en orden.">Rank your top 5 in order of personal importance. Tap in order.</div>
+      <div class="top5-grid" id="top5">
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Yoga & meditation" data-es="Yoga & meditación">Yoga & meditation</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Running circuit" data-es="Circuito running">Running circuit</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Calisthenics park" data-es="Parque calistenia">Calisthenics park</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Putting green" data-es="Putting green">Putting green</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Sensory garden" data-es="Jardín sensorial">Sensory garden</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Reading area" data-es="Zona de lectura">Reading area</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Outdoor cinema" data-es="Cine exterior">Outdoor cinema</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="BBQ / outdoor kitchen" data-es="Zona BBQ">BBQ / outdoor kitchen</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Pet station" data-es="Pet station">Pet station</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Social games" data-es="Juegos sociales">Social games</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Kids club" data-es="Kids club">Kids club</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Bike station" data-es="Bike station">Bike station</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Car wash area" data-es="Lavado de coches">Car wash area</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Scooter charging" data-es="Carga patinetes">Scooter charging</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Car sharing / VTC" data-es="Car sharing / VTC">Car sharing / VTC</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Wine cellar" data-es="Wine cellar">Wine cellar</span></div>
+        <div class="chip" onclick="toggleTop5(this)"><div class="chip-num"></div><span data-en="Sport room" data-es="Sport room">Sport room</span></div>
+      </div>
+      <div class="counter" id="top5count">0 / 5 selected</div>
+    </div>
+
+    <!-- OPEN QUESTION -->
+    <div class="card">
+      <div class="sec-label" data-en="Your ideas" data-es="Tus ideas">Your ideas</div>
+      <div class="sec-title" data-en="Is there anything missing?" data-es="¿Falta algo?">Is there anything missing?</div>
+      <div class="sec-sub" data-en="Is there any service not listed above that would be important for your day-to-day life in the community?" data-es="¿Hay algún servicio no incluido en la lista que sería importante para tu día a día en la comunidad?">Is there any service not listed above that would be important for your day-to-day life in the community?</div>
+      <div class="radio-group" id="has-suggestion">
+        <div class="radio-opt" onclick="selectRadio(this,'has-suggestion');showSuggestion(true)"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Yes, I have a suggestion" data-es="Sí, tengo una sugerencia">Yes, I have a suggestion</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'has-suggestion');showSuggestion(false)"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="No, the options cover my needs" data-es="No, las opciones cubren mis necesidades">No, the options cover my needs</span></div>
+      </div>
+      <div id="suggestion-section" class="hidden-section">
+        <label class="field-label" data-en="Please share your idea:" data-es="Por favor, comparte tu idea:">Please share your idea:</label>
+        <textarea id="suggestion" placeholder="e.g. A communal herb garden, a co-working space..."></textarea>
+      </div>
+    </div>
+
+    <button class="submit-btn" onclick="submitSurvey()" data-en="Submit my responses →" data-es="Enviar mis respuestas →">Submit my responses →</button>
+  </div>
+
+  <div id="thankyou" style="display:none">
+    <div class="thank-you">
+      <div class="ty-icon">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#018080" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 data-en="Thank you — your voice matters!" data-es="¡Gracias — tu opinión importa!">Thank you — your voice matters!</h2>
+      <p data-en="Your feedback has been recorded and will directly shape the services and amenities of your future home at Culmia Cala Swing Mijas. We'll be in touch." data-es="Tu opinión ha sido registrada y contribuirá directamente a definir los servicios y amenities de tu futura vivienda en Culmia Cala Swing Mijas. Nos pondremos en contacto contigo.">Your feedback has been recorded and will directly shape the services and amenities of your future home at Culmia Cala Swing Mijas. We'll be in touch.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+var lang='en', top5Count=0;
+function setLang(l,btn){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+  document.querySelectorAll('[data-'+l+']').forEach(function(el){
+    var v=el.getAttribute('data-'+l);
+    if(v) el.textContent=v;
+  });
+  updateTop5Counter();
+  var ph={en:{fname:'e.g. James Wilson',femail:'e.g. james@email.com',suggestion:'e.g. A communal herb garden, a co-working space...'},es:{fname:'ej. Carlos García',femail:'ej. carlos@email.com',suggestion:'ej. Un huerto comunitario, un espacio de coworking...'}};
+  ['fname','femail','suggestion'].forEach(function(id){var el=document.getElementById(id);if(el)el.placeholder=ph[l][id];});
+}
+function toggle(el){el.classList.toggle('selected');updateProgress();}
+function selectRadio(el,groupId){
+  document.querySelectorAll('#'+groupId+' .radio-opt').forEach(function(b){b.classList.remove('selected')});
+  el.classList.add('selected');
+  updateProgress();
+}
+function showPet(show){
+  document.getElementById('pet-section').style.display=show?'block':'none';
+}
+function showSuggestion(show){
+  document.getElementById('suggestion-section').style.display=show?'block':'none';
+}
+function toggleTop5(el){
+  if(el.classList.contains('selected')){
+    el.classList.remove('selected');
+    el.querySelector('.chip-num').textContent='';
+    top5Count--;
+    reorderRanks();
+  } else {
+    if(top5Count>=5){
+      var c=document.getElementById('top5count');
+      c.textContent=lang==='en'?'Maximum 5 reached':'Máximo 5 alcanzado';
+      c.style.color='#b45309';
+      setTimeout(updateTop5Counter,1600);
+      return;
+    }
+    top5Count++;
+    el.classList.add('selected');
+    el.querySelector('.chip-num').textContent=top5Count;
+  }
+  updateTop5Counter();
+  updateProgress();
+}
+function reorderRanks(){
+  top5Count=0;
+  document.querySelectorAll('#top5 .chip.selected').forEach(function(c){
+    top5Count++;
+    c.querySelector('.chip-num').textContent=top5Count;
+  });
+}
+function updateTop5Counter(){
+  var c=document.getElementById('top5count');
+  c.textContent=top5Count+' / 5 '+(lang==='en'?'selected':'seleccionados');
+  c.style.color=top5Count===5?'#018080':'#668';
+  c.className='counter'+(top5Count===5?' done':'');
+}
+function updateProgress(){
+  var f=0;
+  if(document.getElementById('fname').value.trim()) f++;
+  if(document.getElementById('femail').value.trim()) f++;
+  if(document.querySelectorAll('#buyer-type .selected').length>0) f++;
+  ['s1a','s1b','s1c','s2a','s2b','s2c'].forEach(function(id){
+    if(document.querySelectorAll('#'+id+' .selected').length>0) f++;
+  });
+  if(document.querySelectorAll('#has-pet .selected').length>0) f++;
+  if(document.querySelectorAll('#has-suggestion .selected').length>0) f++;
+  if(top5Count===5) f++;
+  var pct=Math.round((f/12)*100);
+  document.getElementById('pfill').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'%';
+}
+var SHEET_URL='https://script.google.com/macros/s/AKfycbzpQmIkHjfkyKBXYs5O7sdJmoHOes0NO6FkWv2Tpdh3kcne4G5uVEmtJGZda4cuu4om/exec';
+var TOKEN='';
+
+window.addEventListener('load', function(){
+  var params = new URLSearchParams(window.location.search);
+  TOKEN = params.get('token') || '';
+  if (!TOKEN) { showAccessDenied('no_token'); return; }
+
+  fetch(SHEET_URL + '?token=' + TOKEN + '&survey=buyers')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.valid) {
+        document.getElementById('access-screen').style.display='none';
+        document.getElementById('main-content').style.display='block';
+        if (d.name) {
+          document.getElementById('fname').value = d.name;
+          if (d.email) document.getElementById('femail').value = d.email;
+          updateProgress();
+        }
+      } else {
+        showAccessDenied(d.reason);
+      }
+    })
+    .catch(function(){ showAccessDenied('error'); });
+});
+
+function showAccessDenied(reason){
+  var msgs = {
+    no_token:     {t:'Access required', s:'Please use the personalised link sent to you by the Culmia team.'},
+    not_found:    {t:'Invalid link', s:'This access link is not recognised. Please contact the Culmia sales team.'},
+    already_used: {t:'Already submitted', s:'This link has already been used. Thank you for your participation.'},
+    error:        {t:'Connection error', s:'Please try again in a few moments.'}
+  };
+  var m = msgs[reason] || msgs['error'];
+  document.getElementById('access-title').textContent = m.t;
+  document.getElementById('access-msg').textContent = m.s;
+  document.getElementById('access-screen').style.display='flex';
+  document.getElementById('main-content').style.display='none';
+}
+
+function collectData(){
+  var d={};
+  d['Timestamp']=new Date().toISOString();
+  d['Survey']='Buyers / Investors';
+  d['Name']=document.getElementById('fname').value.trim();
+  d['Email']=document.getElementById('femail').value.trim();
+  d['Buyer_Type']=getRadio('buyer-type');
+  d['S1A_Wellbeing']=getSelected('s1a');
+  d['S1B_Experience']=getSelected('s1b');
+  d['S1C_Social']=getSelected('s1c');
+  d['Has_Pet']=getRadio('has-pet');
+  d['S1D_PetStation']=getSelected('s1d');
+  d['S2A_Leisure']=getSelected('s2a');
+  d['S2B_Practical']=getSelected('s2b');
+  d['S2C_Aspirational']=getSelected('s2c');
+  d['Top5']=getTop5();
+  d['Has_Suggestion']=getRadio('has-suggestion');
+  d['Suggestion']=document.getElementById('suggestion')?document.getElementById('suggestion').value.trim():'';
+  return d;
+}
+
+function getSelected(groupId){
+  var names=[];
+  document.querySelectorAll('#'+groupId+' .opt.selected .opt-name').forEach(function(el){names.push(el.textContent.trim());});
+  return names.join(' | ');
+}
+
+function getRadio(groupId){
+  var sel=document.querySelector('#'+groupId+' .radio-opt.selected span');
+  return sel?sel.textContent.trim():'';
+}
+
+function getTop5(){
+  var items=[];
+  document.querySelectorAll('#top5 .chip.selected').forEach(function(c){
+    items.push(c.querySelector('.chip-num').textContent+'. '+c.querySelector('span').textContent.trim());
+  });
+  return items.join(' | ');
+}
+
+function submitSurvey(){
+  var name=document.getElementById('fname').value.trim();
+  var email=document.getElementById('femail').value.trim();
+  var type=document.querySelectorAll('#buyer-type .selected').length>0;
+  var ok=true;
+  function se(id,show){document.getElementById(id).style.display=show?'block':'none';}
+  if(!name){se('err-name',true);ok=false;}else se('err-name',false);
+  if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){se('err-email',true);ok=false;}else se('err-email',false);
+  if(!type){se('err-type',true);ok=false;}else se('err-type',false);
+  if(!ok){document.getElementById('err-name').scrollIntoView({behavior:'smooth',block:'center'});return;}
+
+  var btn=document.querySelector('.submit-btn');
+  btn.textContent='Sending...';
+  btn.disabled=true;
+
+  fetch(SHEET_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(collectData())
+  }).then(function(){
+    document.getElementById('form-body').style.display='none';
+    document.getElementById('thankyou').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }).catch(function(){
+    btn.textContent='Submit my responses →';
+    btn.disabled=false;
+    alert('Connection error. Please try again.');
+  });
+}
+</script>
+</body>
+</html>
