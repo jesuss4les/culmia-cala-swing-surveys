@@ -367,6 +367,31 @@ textarea{resize:vertical;min-height:80px}
 
 <script>
 var lang='en', top5Count=0;
+
+function sendViaIframe(data, onSuccess, onError){
+  try {
+    var iframe = document.createElement('iframe');
+    iframe.name = 'hidden_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = SHEET_URL;
+    form.target = 'hidden_iframe';
+    form.style.display = 'none';
+
+    var input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(data);
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    setTimeout(function(){ onSuccess(); }, 2000);
+    form.submit();
+  } catch(e){ onError(); }
+}
 function setLang(l,btn){
   lang=l;
   document.querySelectorAll('.lang-btn').forEach(function(b){b.classList.remove('active')});
