@@ -159,6 +159,14 @@ input[type=text]:focus,input[type=email]:focus{border-color:#018080}
       <label class="field-label" data-en="Email address" data-es="Correo electrónico">Email address <span class="required">*</span></label>
       <input type="email" id="femail" placeholder="e.g. john@agency.com" oninput="updateProgress()"/>
       <div class="err" id="err-email" data-en="Please enter a valid email." data-es="Por favor, introduce un email válido.">Please enter a valid email.</div>
+       <label class="field-label" data-en="Your clients are seeking:" data-es="Tus clientes buscan:">Your clients are seeking: <span class="required">*</span></label>
+      <div class="radio-group" id="buyer-type">
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Main Residence" data-es="Primera vivienda">Main Residence</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Holiday Home" data-es="Segunda residencia">Holiday Home</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Investor" data-es="Inversor">Investor</span></div>
+        <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Both" data-es="Ambos">Both</span></div>
+      </div>
+      <div class="err" id="err-type" data-en="Please select a Client Profile." data-es="Por favor, selecciona el tipo de cliente.">Please select a purchase type.</div>
     </div>
 
     <!-- S1A WELLBEING -->
