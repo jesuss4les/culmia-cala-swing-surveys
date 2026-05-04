@@ -48,6 +48,15 @@ input[type=text]:focus,input[type=email]:focus{border-color:#018080}
 .opt.selected .tick{display:block}
 .opt-name{font-size:13px;font-weight:700;color:#00272c;margin-bottom:2px}
 .opt-desc{font-size:11px;color:#668;line-height:1.4}
+  /* RADIO BUTTONS */
+.radio-group{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem}
+.radio-opt{flex:1;min-width:120px;padding:10px 14px;border:1.5px solid #c4d8dc;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;color:#456;text-align:center;background:#fff;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:8px}
+.radio-opt:hover{border-color:#018080}
+.radio-opt.selected{border:2px solid #018080;background:#f0f9f9;color:#018080}
+.radio-dot{width:16px;height:16px;border-radius:50%;border:1.5px solid #b0c8cc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.radio-opt.selected .radio-dot{border-color:#018080}
+.radio-dot-inner{width:8px;height:8px;border-radius:50%;background:#018080;display:none}
+.radio-opt.selected .radio-dot-inner{display:block}
 /* TOP 5 */
 .top5-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:8px}
 .chip{padding:9px 13px;border:1.5px solid #c4d8dc;border-radius:9px;background:#fff;cursor:pointer;font-size:13px;color:#00272c;display:flex;align-items:center;gap:9px;transition:all .15s}
@@ -159,7 +168,7 @@ input[type=text]:focus,input[type=email]:focus{border-color:#018080}
       <label class="field-label" data-en="Email address" data-es="Correo electrónico">Email address <span class="required">*</span></label>
       <input type="email" id="femail" placeholder="e.g. john@agency.com" oninput="updateProgress()"/>
       <div class="err" id="err-email" data-en="Please enter a valid email." data-es="Por favor, introduce un email válido.">Please enter a valid email.</div>
-       <label class="field-label" data-en="Your clients are seeking:" data-es="Tus clientes buscan:">Your clients are seeking: <span class="required">*</span></label>
+      <label class="field-label" data-en="Your clients are seeking:" data-es="Tus clientes buscan:">Your clients are seeking: <span class="required">*</span></label>
       <div class="radio-group" id="buyer-type">
         <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Main Residence" data-es="Primera vivienda">Main Residence</span></div>
         <div class="radio-opt" onclick="selectRadio(this,'buyer-type')"><div class="radio-dot"><div class="radio-dot-inner"></div></div><span data-en="Holiday Home" data-es="Segunda residencia">Holiday Home</span></div>
