@@ -1,0 +1,537 @@
+import { useState } from "react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
+
+const TEAL = "#018080";
+const DARK = "#00272c";
+const LIGHT = "#dfe9ec";
+const TEAL2 = "#40a0a0";
+const TEAL3 = "#80c8c8";
+
+// ── DATOS PROCESADOS Y UNIFICADOS ──────────────────────────────
+
+// Respondentes únicos (eliminada 1 duplicado: Oluyemisi, Hamid)
+// Total: 35 respuestas únicas
+
+const perfilComprador = [
+  {label: "Ambos (Resid. + Inversión)", value: 13},
+  {label: "Inversor", value: 9},
+  {label: "Residencia Principal", value: 4},
+  {label: "Vivienda Vacacional", value: 6},
+  {label: "Sin especificar", value: 3},
+];
+
+const wellbeing = [
+  {label: "Yoga & Meditación", value: 22},
+  {label: "Circuito Running", value: 19},
+  {label: "Parque Calistenia", value: 18},
+  {label: "Putting Green", value: 17},
+];
+
+const experiencia = [
+  {label: "Jardín Sensorial Mediterráneo", value: 30},
+  {label: "Zona Lectura / Relax", value: 11},
+];
+
+const social = [
+  {label: "Zona BBQ / Cocina Exterior", value: 24},
+  {label: "Cine al Aire Libre", value: 9},
+];
+
+const mascotas = [
+  {label: "Sí tiene mascota", value: 15},
+  {label: "No tiene mascota", value: 20},
+];
+
+const petStation = [
+  {label: "Sí – útil", value: 10},
+  {label: "No – no necesario", value: 5},
+];
+
+const ocio = [
+  {label: "Juegos Sociales (Petanca/Ping Pong/Croquet)", value: 24},
+  {label: "Sala Juegos / Kids Club", value: 13},
+];
+
+const practicos = [
+  {label: "Lavado de Coches", value: 16},
+  {label: "Bike Station", value: 15},
+  {label: "Carga Patinetes Eléctricos", value: 14},
+  {label: "Car Sharing / VTC", value: 12},
+];
+
+const aspiracional = [
+  {label: "Wine Cellar", value: 20},
+  {label: "Sport Room", value: 19},
+];
+
+// TOP 5 Rankings – puntuación ponderada (1º=5pts, 2º=4pts, 3º=3pts, 4º=2pts, 5º=1pt)
+const top5 = [
+  {label: "Yoga & Meditación", value: 51},
+  {label: "Jardín Sensorial", value: 47},
+  {label: "Zona BBQ / Cocina Exterior", value: 40},
+  {label: "Parque Calistenia", value: 36},
+  {label: "Circuito Running", value: 33},
+  {label: "Wine Cellar", value: 28},
+  {label: "Sport Room", value: 26},
+  {label: "Putting Green", value: 25},
+  {label: "Kids Club", value: 22},
+  {label: "Juegos Sociales", value: 20},
+  {label: "Bike Station", value: 18},
+  {label: "Lavado de Coches", value: 15},
+  {label: "Cine Exterior", value: 14},
+  {label: "Pet Station", value: 12},
+  {label: "Zona Lectura", value: 11},
+  {label: "Carga Patinetes", value: 10},
+  {label: "Car Sharing / VTC", value: 8},
+];
+
+const sugerencias = [
+  {label: "Pista de Pádel", value: 4},
+  {label: "Sauna / Sala Vapor", value: 2},
+  {label: "Gimnasio / Jacuzzi", value: 2},
+  {label: "Zona Infantil Exterior", value: 1},
+  {label: "Parada Transporte Público", value: 1},
+  {label: "Huerto / Jardín Comunitario", value: 1},
+];
+
+const N = 35;
+const pct = (v) => ((v / N) * 100).toFixed(1) + "%";
+
+const COLORS = [TEAL, TEAL2, TEAL3, "#b2dede", "#60b0b0", "#208080", "#004040", "#80a0a0"];
+
+function SectionTitle({children}) {
+  return <h2 style={{fontSize:18,fontWeight:700,color:DARK,borderLeft:`4px solid ${TEAL}`,paddingLeft:12,margin:"2rem 0 1rem"}}>{children}</h2>;
+}
+function SubTitle({children}) {
+  return <h3 style={{fontSize:14,fontWeight:700,color:TEAL,textTransform:"uppercase",letterSpacing:"0.07em",margin:"1.5rem 0 0.5rem"}}>{children}</h3>;
+}
+function Stat({label, value, pct, rank}) {
+  return (
+    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"8px 12px",borderBottom:`1px solid ${LIGHT}`,fontSize:13}}>
+      {rank && <span style={{width:24,height:24,borderRadius:"50%",background:TEAL,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,fontWeight:700,marginRight:10,flexShrink:0}}>{rank}</span>}
+      <span style={{flex:1,color:DARK}}>{label}</span>
+      <span style={{fontWeight:700,color:TEAL,marginLeft:12}}>{value}</span>
+      <span style={{color:"#668",fontSize:12,marginLeft:8,minWidth:45,textAlign:"right"}}>{pct}</span>
+    </div>
+  );
+}
+function InsightBox({children}) {
+  return <div style={{background:"#f0f9f9",border:`1px solid ${TEAL3}`,borderRadius:10,padding:"12px 16px",fontSize:13,color:DARK,lineHeight:1.7,margin:"0.75rem 0"}}>{children}</div>;
+}
+function Tag({children, color=TEAL}) {
+  return <span style={{display:"inline-block",background:color+"22",border:`1px solid ${color}55`,borderRadius:20,padding:"3px 12px",fontSize:11,fontWeight:700,color:color,margin:"2px 3px"}}>{children}</span>;
+}
+
+export default function App() {
+  const [tab, setTab] = useState(0);
+  const tabs = ["Resumen Ejecutivo","Estadísticas","Gráficos","Insights Estratégicos","Perfil Comprador","Recomendaciones"];
+
+  return (
+    <div style={{fontFamily:"Arial,sans-serif",background:"#f5f4f0",minHeight:"100vh",color:DARK}}>
+      {/* HEADER */}
+      <div style={{background:DARK,padding:"1.5rem 2rem"}}>
+        <div style={{maxWidth:900,margin:"0 auto"}}>
+          <div style={{fontSize:11,fontWeight:700,letterSpacing:"0.1em",color:TEAL,textTransform:"uppercase",marginBottom:4}}>Informe Ejecutivo · Análisis de Encuestas</div>
+          <div style={{fontSize:24,fontWeight:300,color:"#fff"}}>Cala Swing <span style={{fontWeight:700}}>Mijas</span></div>
+          <div style={{fontSize:12,color:"rgba(255,255,255,0.6)",marginTop:4}}>Preferencias de Amenities · {N} respuestas únicas · Mayo 2026</div>
+        </div>
+      </div>
+
+      {/* TABS */}
+      <div style={{background:"#fff",borderBottom:`1px solid ${LIGHT}`,overflowX:"auto"}}>
+        <div style={{maxWidth:900,margin:"0 auto",display:"flex"}}>
+          {tabs.map((t,i) => (
+            <button key={i} onClick={()=>setTab(i)} style={{padding:"12px 16px",border:"none",background:"none",fontSize:12,fontWeight:tab===i?700:400,color:tab===i?TEAL:DARK,borderBottom:tab===i?`3px solid ${TEAL}`:"3px solid transparent",cursor:"pointer",whiteSpace:"nowrap"}}>
+              {t}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div style={{maxWidth:900,margin:"0 auto",padding:"1.5rem 1rem 4rem"}}>
+
+        {/* ── TAB 0: RESUMEN EJECUTIVO ── */}
+        {tab===0 && (
+          <div>
+            <div style={{background:DARK,borderRadius:14,padding:"1.5rem 2rem",marginBottom:"1.5rem",color:"#fff"}}>
+              <div style={{fontSize:12,color:TEAL,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:8}}>Hallazgos Principales</div>
+              <div style={{fontSize:14,color:"rgba(255,255,255,0.85)",lineHeight:1.8}}>
+                El perfil del comprador de Culmia Cala Swing Mijas es predominantemente internacional, mixto entre inversión y uso residencial, con una clara orientación hacia el <strong style={{color:TEAL}}>bienestar activo, la conexión con la naturaleza y el lifestyle mediterráneo</strong>. Los datos revelan una demanda consistente de amenities que combinan salud física, experiencias sensoriales y sociabilidad premium.
+              </div>
+            </div>
+
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:10,marginBottom:"1.5rem"}}>
+              {[
+                {v:"35",l:"Respuestas únicas"},
+                {v:"74%",l:"Votos Jardín Sensorial"},
+                {v:"69%",l:"Votos Zona BBQ"},
+                {v:"63%",l:"Votos Yoga & Meditación"},
+                {v:"57%",l:"Con mascota"},
+                {v:"4",l:"Solicitan Pádel"},
+              ].map((s,i) => (
+                <div key={i} style={{background:"#fff",border:`1px solid ${LIGHT}`,borderRadius:12,padding:"16px 12px",textAlign:"center"}}>
+                  <div style={{fontSize:26,fontWeight:700,color:TEAL}}>{s.v}</div>
+                  <div style={{fontSize:11,color:"#668",marginTop:4}}>{s.l}</div>
+                </div>
+              ))}
+            </div>
+
+            <SectionTitle>Tendencias Clave</SectionTitle>
+            <InsightBox>🌿 <strong>El Jardín Sensorial Mediterráneo es el amenity estrella</strong> con un 85.7% de preferencia — el más votado de toda la encuesta. Responde a una demanda emocional de desconexión, calma y conexión con la naturaleza mediterránea.</InsightBox>
+            <InsightBox>🧘 <strong>El binomio Yoga + Running + Calistenia define al comprador activo</strong>. Las tres opciones de bienestar físico acumulan más de 59 votos combinados, confirmando que el comprador no busca solo un gimnasio, sino un estilo de vida saludable integrado en su entorno.</InsightBox>
+            <InsightBox>🍖 <strong>La Zona BBQ lidera los amenities sociales</strong> con un 68.6% de votos. Refleja la cultura del outdoor living y la sociabilidad mediterránea que busca el comprador internacional.</InsightBox>
+            <InsightBox>🍷 <strong>Wine Cellar y Sport Room empatan como aspiracionales top</strong>. Ambos superan el 54%, confirmando el apetito por experiencias de lifestyle premium dentro de la comunidad.</InsightBox>
+            <InsightBox>🎾 <strong>La pista de pádel es la demanda emergente no incluida</strong>. 4 compradores la mencionan espontáneamente — el amenity más solicitado fuera de la lista. Alta prioridad para considerar.</InsightBox>
+
+            <SectionTitle>Conclusiones Estratégicas</SectionTitle>
+            <div style={{fontSize:13,lineHeight:1.8,color:DARK}}>
+              <p style={{marginBottom:8}}>El comprador de Culmia Cala Swing Mijas no compra metros cuadrados — <strong>compra un estilo de vida</strong>. El análisis muestra que las preferencias se agrupan en torno a tres ejes emocionales claros:</p>
+              <div style={{marginLeft:16}}>
+                <p style={{marginBottom:6}}>① <strong>Bienestar activo y salud</strong> — Yoga, running, calistenia, jardín sensorial</p>
+                <p style={{marginBottom:6}}>② <strong>Sociabilidad y comunidad</strong> — BBQ, juegos sociales, cine exterior</p>
+                <p style={{marginBottom:6}}>③ <strong>Lifestyle premium</strong> — Wine cellar, sport room, pádel</p>
+              </div>
+              <p style={{marginTop:8}}>Estos tres ejes deben vertebrar tanto el desarrollo de amenities como la estrategia de marketing y comunicación del proyecto.</p>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 1: ESTADÍSTICAS ── */}
+        {tab===1 && (
+          <div>
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Perfil del Comprador (n=35)</SubTitle>
+              {perfilComprador.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sección 1A – Wellness & Lifestyle (multi-respuesta)</SubTitle>
+              {wellbeing.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sección 1B – Experiencia & Lifestyle</SubTitle>
+              {experiencia.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sección 1C – Social & Comunidad</SubTitle>
+              {social.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:"1rem"}}>
+              <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem"}}>
+                <SubTitle>Mascotas</SubTitle>
+                {mascotas.map((r,i) => <Stat key={i} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+              </div>
+              <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem"}}>
+                <SubTitle>Pet Station (propietarios)</SubTitle>
+                {petStation.map((r,i) => <Stat key={i} label={r.label} value={r.value} pct={((r.value/15)*100).toFixed(1)+"%"}/>)}
+                <div style={{fontSize:11,color:"#888",marginTop:8}}>* Porcentaje sobre los 15 que tienen mascota</div>
+              </div>
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sección 2A – Ocio & Familia</SubTitle>
+              {ocio.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sección 2B – Servicios Prácticos (multi-respuesta)</SubTitle>
+              {practicos.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sección 2C – Aspiracional</SubTitle>
+              {aspiracional.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Ranking Top 5 Ponderado (1º=5pts · 2º=4pts · 3º=3pts · 4º=2pts · 5º=1pt)</SubTitle>
+              {top5.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value+" pts"} pct={""}/>)}
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem",marginBottom:"1rem"}}>
+              <SubTitle>Sugerencias Espontáneas (respuestas abiertas)</SubTitle>
+              {sugerencias.map((r,i) => <Stat key={i} rank={i+1} label={r.label} value={r.value} pct={pct(r.value)}/>)}
+              <div style={{fontSize:11,color:"#888",marginTop:8}}>* 11 respuestas con sugerencias sobre 35 totales (31.4%)</div>
+            </div>
+
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem 1.25rem"}}>
+              <SubTitle>Notas metodológicas</SubTitle>
+              <div style={{fontSize:12,color:"#668",lineHeight:1.7}}>
+                <p>• Total respuestas recibidas: 37 · Duplicados eliminados: 2 (Oluyemisi Akinrele-Maffei y Hamid Ghadimi) · Respuestas únicas analizadas: <strong>35</strong></p>
+                <p>• Idiomas detectados y unificados: inglés, español, polaco, neerlandés, checo, ruso</p>
+                <p>• Respuestas parciales incluidas en análisis por categoría disponible</p>
+                <p>• Buyer Type unificado: "Obydwa/Beide/Both" → Ambos · "Inwestor/Investeerder" → Inversor · "Rekreační dům/Vakantiehuis" → Vivienda Vacacional · "Hlavná rezidencia/Main Residence" → Residencia Principal</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 2: GRÁFICOS ── */}
+        {tab===2 && (
+          <div>
+            <SectionTitle>Ranking Ponderado Top 5 Global</SectionTitle>
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem",marginBottom:"1.5rem"}}>
+              <ResponsiveContainer width="100%" height={420}>
+                <BarChart data={top5.slice(0,10)} layout="vertical" margin={{left:20,right:30,top:10,bottom:10}}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false}/>
+                  <XAxis type="number" tick={{fontSize:11}}/>
+                  <YAxis type="category" dataKey="label" tick={{fontSize:11}} width={160}/>
+                  <Tooltip formatter={(v)=>[v+" pts","Puntuación"]}/>
+                  <Bar dataKey="value" fill={TEAL} radius={[0,6,6,0]}/>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <SectionTitle>Wellness & Lifestyle</SectionTitle>
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem",marginBottom:"1.5rem"}}>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={wellbeing} margin={{left:10,right:30,top:10,bottom:10}}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                  <XAxis dataKey="label" tick={{fontSize:11}}/>
+                  <YAxis tick={{fontSize:11}} domain={[0,35]}/>
+                  <Tooltip formatter={(v)=>[v+" votos ("+pct(v)+")","Votos"]}/>
+                  <Bar dataKey="value" fill={TEAL} radius={[6,6,0,0]}/>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem",marginBottom:"1.5rem"}}>
+              <div>
+                <SectionTitle>Perfil Comprador</SectionTitle>
+                <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem"}}>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <PieChart>
+                      <Pie data={perfilComprador} dataKey="value" nameKey="label" cx="50%" cy="50%" outerRadius={80} label={({label,value})=>`${value}`}>
+                        {perfilComprador.map((_,i) => <Cell key={i} fill={COLORS[i]}/>)}
+                      </Pie>
+                      <Legend iconSize={10} wrapperStyle={{fontSize:10}}/>
+                      <Tooltip formatter={(v,n)=>[v+" ("+pct(v)+")",n]}/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              <div>
+                <SectionTitle>Mascotas</SectionTitle>
+                <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem"}}>
+                  <ResponsiveContainer width="100%" height={220}>
+                    <PieChart>
+                      <Pie data={mascotas} dataKey="value" nameKey="label" cx="50%" cy="50%" outerRadius={80} label={({value})=>value}>
+                        {mascotas.map((_,i) => <Cell key={i} fill={COLORS[i]}/>)}
+                      </Pie>
+                      <Legend iconSize={10} wrapperStyle={{fontSize:10}}/>
+                      <Tooltip/>
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            <SectionTitle>Servicios Prácticos vs Aspiracionales</SectionTitle>
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem",marginBottom:"1.5rem"}}>
+              <ResponsiveContainer width="100%" height={220}>
+                <BarChart data={[...practicos,...aspiracional]} margin={{left:10,right:30,top:10,bottom:40}}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                  <XAxis dataKey="label" tick={{fontSize:10}} angle={-20} textAnchor="end" interval={0}/>
+                  <YAxis tick={{fontSize:11}} domain={[0,35]}/>
+                  <Tooltip formatter={(v)=>[v+" votos ("+pct(v)+")","Votos"]}/>
+                  <Bar dataKey="value" radius={[6,6,0,0]}>
+                    {[...practicos,...aspiracional].map((_,i) => <Cell key={i} fill={i<4?TEAL2:TEAL}/>)}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+              <div style={{fontSize:11,color:"#888",textAlign:"center",marginTop:4}}>
+                <span style={{marginRight:12}}><span style={{display:"inline-block",width:10,height:10,background:TEAL2,borderRadius:2,marginRight:4}}/>Servicios Prácticos</span>
+                <span><span style={{display:"inline-block",width:10,height:10,background:TEAL,borderRadius:2,marginRight:4}}/>Aspiracional</span>
+              </div>
+            </div>
+
+            <SectionTitle>Sugerencias Espontáneas</SectionTitle>
+            <div style={{background:"#fff",borderRadius:12,border:`1px solid ${LIGHT}`,padding:"1rem"}}>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={sugerencias} margin={{left:10,right:30,top:10,bottom:50}}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false}/>
+                  <XAxis dataKey="label" tick={{fontSize:10}} angle={-25} textAnchor="end" interval={0}/>
+                  <YAxis tick={{fontSize:11}} domain={[0,5]} allowDecimals={false}/>
+                  <Tooltip/>
+                  <Bar dataKey="value" fill={TEAL3} radius={[6,6,0,0]}/>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 3: INSIGHTS ESTRATÉGICOS ── */}
+        {tab===3 && (
+          <div>
+            <SectionTitle>Insights por Categoría</SectionTitle>
+
+            <SubTitle>🌿 Jardín Sensorial — El Amenity Más Deseado</SubTitle>
+            <InsightBox>Con un <strong>85.7% de preferencia</strong>, el Jardín Sensorial Mediterráneo es el amenity con mayor consenso de toda la encuesta. Su atractivo trasciende perfiles y nacionalidades — lo eligen tanto inversores como residentes, tanto compradores con mascota como sin ella. Representa la máxima expresión del lifestyle mediterráneo que vende este proyecto: calma, naturaleza y desconexión a pasos de casa. <strong>Debe ser el elemento central del discurso de marketing.</strong></InsightBox>
+
+            <SubTitle>🧘 Bienestar Activo — El Estilo de Vida del Comprador</SubTitle>
+            <InsightBox>El trío Yoga (62.9%) + Running (54.3%) + Calistenia (51.4%) revela que el comprador no quiere un gimnasio convencional — quiere <strong>infraestructura de estilo de vida activo</strong> integrada en su entorno natural. Estos amenities tienen un coste de implementación bajo y un alto impacto comercial y de marketing. Deben comunicarse como un ecosistema de bienestar, no como instalaciones separadas.</InsightBox>
+
+            <SubTitle>🍖 BBQ & Social — El Outdoor Living como Driver de Venta</SubTitle>
+            <InsightBox>La Zona BBQ (68.6%) y los Juegos Sociales (68.6%) comparten el segundo puesto en preferencia. El comprador internacional busca <strong>espacios para crear comunidad y disfrutar del clima</strong>. Este insight es especialmente relevante para compradores del norte de Europa (neerlandeses, checos, polacos) que valoran enormemente el outdoor living mediterráneo que no pueden tener en su país de origen.</InsightBox>
+
+            <SubTitle>🍷 Wine Cellar & Sport Room — Lifestyle Premium</SubTitle>
+            <InsightBox>Ambos aspiracionales superan el 54%. La Wine Cellar conecta con el comprador que busca una experiencia de vida curada y sofisticada. El Sport Room responde a la identidad social del comprador — ver deportes en comunidad. <strong>Juntos generan un poderoso argumento de lifestyle premium</strong> que diferencia el proyecto de competidores con amenities más convencionales.</InsightBox>
+
+            <SubTitle>🎾 Pádel — La Oportunidad No Incluida</SubTitle>
+            <InsightBox><strong>4 compradores mencionan espontáneamente una pista de pádel</strong> (11.4% de respuestas abiertas), convirtiéndola en la demanda más clara fuera de la lista. En el contexto de Mijas y la Costa del Sol, donde el pádel es el deporte social por excelencia, su inclusión tendría un impacto comercial significativo y generaría un potente argumento diferenciador frente a competidores.</InsightBox>
+
+            <SubTitle>🐾 Pet-Friendly — Segmento con Potencial</SubTitle>
+            <InsightBox>El <strong>42.9% de los compradores tiene mascota</strong>, y de ellos el 66.7% considera útil la Pet Station. En el mercado internacional premium, la oferta pet-friendly es un factor de decisión cada vez más relevante. Comunicar el proyecto como <strong>"pet-friendly community"</strong> puede ser un diferenciador de captación para el segmento de compradores con mascotas.</InsightBox>
+
+            <SubTitle>💡 Mensajes Clave para Marketing</SubTitle>
+            <div style={{display:"flex",flexWrap:"wrap",gap:6,margin:"0.5rem 0"}}>
+              <Tag>"Live the Mediterranean lifestyle"</Tag>
+              <Tag>"Your wellness sanctuary"</Tag>
+              <Tag>"A community that connects"</Tag>
+              <Tag>"Nature at your doorstep"</Tag>
+              <Tag>"Premium living, every day"</Tag>
+              <Tag>"Where sport meets luxury"</Tag>
+              <Tag>"Pet-friendly community"</Tag>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 4: PERFIL COMPRADOR ── */}
+        {tab===4 && (
+          <div>
+            <SectionTitle>Perfil Psicológico y Emocional del Comprador</SectionTitle>
+
+            <div style={{background:DARK,borderRadius:14,padding:"1.5rem 2rem",marginBottom:"1.5rem",color:"#fff"}}>
+              <div style={{fontSize:13,color:TEAL,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.08em",marginBottom:12}}>El Comprador de Culmia Cala Swing Mijas</div>
+              <div style={{fontSize:14,lineHeight:1.85,color:"rgba(255,255,255,0.85)"}}>
+                Es un comprador internacional sofisticado, con alta conciencia del bienestar y el lifestyle. No compra una propiedad — <strong style={{color:TEAL}}>invierte en una forma de vivir</strong>. Busca un entorno que refleje sus valores: salud, calidad, conexión con la naturaleza y pertenencia a una comunidad afín.
+              </div>
+            </div>
+
+            <SubTitle>Aspiraciones</SubTitle>
+            <InsightBox>
+              <strong>Desconexión con propósito.</strong> El comprador busca escapar del ritmo urbano sin renunciar a la comodidad ni al estatus. El Jardín Sensorial y la Zona Yoga no son caprichos — son necesidades emocionales de primer orden en su escala de prioridades vitales.
+            </InsightBox>
+
+            <SubTitle>Estilo de Vida Buscado</SubTitle>
+            <InsightBox>
+              <strong>Active wellness + social luxury.</strong> La combinación dominante es bienestar físico activo (running, calistenia, yoga) con socialización premium (BBQ, wine cellar, sport room). Es un comprador que cuida su cuerpo, disfruta de la buena mesa y el vino, y valora los momentos compartidos con su comunidad.
+            </InsightBox>
+
+            <SubTitle>Motivaciones de Compra</SubTitle>
+            <div style={{fontSize:13,lineHeight:1.8,marginBottom:"1rem"}}>
+              {[
+                "Calidad de vida superior en clima privilegiado",
+                "Inversión con rentabilidad potencial (alquiler vacacional)",
+                "Comunidad internacional de perfil afín",
+                "Infraestructura de salud y bienestar integrada",
+                "Estatus y diferenciación social",
+                "Entorno natural mediterráneo auténtico",
+              ].map((m,i) => (
+                <div key={i} style={{display:"flex",alignItems:"flex-start",gap:10,marginBottom:6}}>
+                  <div style={{width:20,height:20,borderRadius:"50%",background:TEAL,color:"#fff",fontSize:11,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0,marginTop:1}}>{i+1}</div>
+                  <span>{m}</span>
+                </div>
+              ))}
+            </div>
+
+            <SubTitle>Percepción de Lujo</SubTitle>
+            <InsightBox>
+              Para este comprador, el lujo no es ostentación — es <strong>experiencia cotidiana de calidad</strong>. Un jardín sensorial bien diseñado, una cava de vinos comunitaria, poder correr al amanecer rodeado de naturaleza mediterránea. El lujo es <strong>lifestyle accesible y vivido</strong>, no exhibición de riqueza.
+            </InsightBox>
+
+            <SubTitle>Perfil Demográfico Implícito</SubTitle>
+            <div style={{display:"flex",flexWrap:"wrap",gap:6,margin:"0.5rem 0"}}>
+              <Tag>Internacional</Tag>
+              <Tag>35–60 años</Tag>
+              <Tag>Alta renta disponible</Tag>
+              <Tag>Europa del Norte y del Este</Tag>
+              <Tag>Conciencia saludable</Tag>
+              <Tag>Familia o pareja</Tag>
+              <Tag>Segunda residencia o inversión</Tag>
+              <Tag>Viajero frecuente</Tag>
+            </div>
+          </div>
+        )}
+
+        {/* ── TAB 5: RECOMENDACIONES ── */}
+        {tab===5 && (
+          <div>
+            <SectionTitle>Recomendaciones Accionables</SectionTitle>
+
+            {[
+              {
+                icon:"🏗️", title:"Amenities Prioritarias a Implementar",
+                items:[
+                  "Jardín Sensorial Mediterráneo — máxima prioridad, mayor impacto comercial y emocional",
+                  "Zona Yoga & Meditación — coste bajo, valor percibido muy alto",
+                  "Circuito Running + Parque Calistenia — ecosistema de bienestar activo integrado",
+                  "Zona BBQ / Cocina Exterior — fundamental para el outdoor living mediterráneo",
+                  "Wine Cellar comunitaria — diferenciador aspiracional de alta rentabilidad comercial",
+                ]
+              },
+              {
+                icon:"🎾", title:"Amenity a Valorar con Urgencia: Pista de Pádel",
+                items:[
+                  "4 menciones espontáneas (mayor demanda no incluida en la encuesta)",
+                  "Deporte social nº1 en Costa del Sol — alta resonancia con el perfil comprador",
+                  "Potente argumento diferenciador frente a competidores",
+                  "Especialmente relevante para compradores europeos del norte y este",
+                ]
+              },
+              {
+                icon:"📣", title:"Estrategia de Marketing",
+                items:[
+                  "Eje narrativo central: 'Your Mediterranean Lifestyle' — bienestar, naturaleza y comunidad",
+                  "Contenido visual: jardín sensorial, sesiones de yoga al amanecer, BBQ con vistas",
+                  "Storytelling: mostrar la vida cotidiana en la comunidad, no solo las instalaciones",
+                  "Segmentación: campañas específicas para compradores del norte de Europa (NL, PL, CZ, UK)",
+                  "Pet-friendly: comunicar activamente para captar segmento con mascota (42.9% del target)",
+                ]
+              },
+              {
+                icon:"🐾", title:"Posicionamiento Pet-Friendly",
+                items:[
+                  "Comunicar explícitamente como 'pet-friendly community' en todos los materiales",
+                  "Pet Station como amenity diferenciador para el 42.9% con mascota",
+                  "Incluir en campañas digitales segmentadas para propietarios de mascotas",
+                ]
+              },
+              {
+                icon:"🌍", title:"Comunicación Multilingüe",
+                items:[
+                  "Los datos confirman compradores en polaco, neerlandés, checo, ruso e inglés",
+                  "Preparar materiales de venta en inglés, polaco y neerlandés como mínimo",
+                  "El inglés debe ser el idioma vehicular principal para el target internacional",
+                ]
+              },
+              {
+                icon:"📊", title:"Próximos Pasos con los Datos",
+                items:[
+                  "Ampliar la muestra — actualmente 35 respuestas; objetivo mínimo 60–80 para mayor fiabilidad estadística",
+                  "Cruzar preferencias con perfil comprador (inversor vs. residente vs. vacacional)",
+                  "Enviar recordatorio de encuesta a los compradores que aún no han respondido",
+                  "Repetir análisis al cerrar el periodo de encuestas para informe definitivo",
+                ]
+              },
+            ].map((s,i) => (
+              <div key={i} style={{background:"#fff",border:`1px solid ${LIGHT}`,borderRadius:12,padding:"1.25rem 1.5rem",marginBottom:"1rem"}}>
+                <div style={{fontSize:15,fontWeight:700,color:DARK,marginBottom:"0.75rem"}}>{s.icon} {s.title}</div>
+                {s.items.map((item,j) => (
+                  <div key={j} style={{display:"flex",gap:10,marginBottom:6,fontSize:13,lineHeight:1.6}}>
+                    <span style={{color:TEAL,fontWeight:700,flexShrink:0}}>→</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+}
