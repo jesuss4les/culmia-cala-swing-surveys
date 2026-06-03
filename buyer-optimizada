@@ -398,7 +398,7 @@ textarea{resize:vertical;min-height:90px}
 </div>
 
 <script>
-var SHEET_URL='https://script.google.com/macros/s/AKfycbxZOVfgYXAMds64nPMIpBIMK8zp9wp071xdHHOLb7jq4kLL6_5bpYom_eFpsloYC6TLAw/exec';
+var SHEET_URL='https://script.google.com/macros/s/AKfycbxWUBLnMC6z8fHBRshc5j5X0IRvvUk43ttgFklzaSE0YMrHwB9Z9GrVKWn9G21LLxYZwg/exec';
 var TOKEN='', lang='en', top3Count=0;
 
 window.addEventListener('load',function(){
